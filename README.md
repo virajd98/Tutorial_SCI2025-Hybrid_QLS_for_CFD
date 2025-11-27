@@ -335,14 +335,7 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Open a Pull Request
 
-## Support & Questions
-
-For questions or issues:
-- Check the notebooks (`Tut_final.ipynb`, `blocks_demo.ipynb`) for examples
-- Review the [AI Coding Agent Instructions](.github/copilot-instructions.md) for architectural details
-- Open an issue on GitHub
-
 ---
 
 **Last Updated**: November 2025  
-**Maintained by**: [virajd98](https://github.com/virajd98)
+**Maintained by**: [virajd98](https://github.com/virajd98) and [DenisPoisson](https://github.com/DenisPoisson)
