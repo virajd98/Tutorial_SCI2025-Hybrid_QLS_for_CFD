@@ -1,0 +1,32 @@
+numpy==2.2.6
+networkx==2.8.5
+rustworkx==0.17.1
+symengine==0.13.0
+sympy==1.14.0
+python-dotenv==1.1.1
+pydantic==2.11.7
+pydantic_core==2.33.2
+typing_extensions==4.12.2
+
+# Qiskit core
+qiskit==1.4.4
+qiskit-aer==0.17.1
+qiskit-algorithms==0.3.1
+qiskit-experiments==0.12.0
+
+# IBM ecosystem
+qiskit-ibm-runtime==0.40.1
+qiskit-ibm-transpiler==0.14.0
+qiskit-ibm-ai-local-transpiler==0.4.2
+qiskit-ibm-experiment==0.4.8
+
+# Qiskit extensions
+qiskit-qasm3-import==0.6.0
+qiskit-ionq==0.6.1
+qiskit-serverless==0.25.4
+
+# OpenQASM / OQPy / OpenPulse
+openqasm3==1.0.1
+oqpy==0.3.7
+openpulse==1.0.1
+ 
