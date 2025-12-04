@@ -18,18 +18,59 @@ where $A$ is a square matrix (typically symmetric/Hermitian) and $x$ is the solu
 
 ### Prerequisites
 
-- Python 3.10+
+````markdown
+### Requirements
+- Python **3.10+**
 
 ### Quick Start
 
+#### Clone the repository
 ```bash
-# Clone the repository
 git clone https://github.com/virajd98/Tutorial_SCI2025-Hybrid_QLS_for_CFD.git
 cd Tutorial_SCI2025-Hybrid_QLS_for_CFD
+````
 
-# Install dependencies
-pip install - r requirements.txt
+#### Setup Environment
+
+**macOS / Linux**
+
+```bash
+chmod +x run.sh
+./run.sh
 ```
+
+**Windows (PowerShell)**
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+./run.ps1
+```
+
+### Activate the Environment (Manual)
+
+**macOS / Linux**
+
+```bash
+source VQLS_env/bin/activate
+```
+
+**Windows (PowerShell)**
+
+```powershell
+.\VQLS_env\Scripts\Activate.ps1
+```
+
+### Deactivate (all OS)
+
+```bash
+deactivate
+```
+
+### Note
+
+When running Jupyter notebooks, make sure to **select the kernel corresponding to the `VQLS_env` environment**.
+
+
 
 ## Architecture
 
@@ -64,7 +105,7 @@ vqls_prototype/
 
 ## Usage Scenarios
 
-### Scenario 1: Standard VQLS for Symmetric Matrices
+### Standard VQLS for Symmetric Matrices
 
 Use this for most PDE discretizations (Laplacian, diffusion equations):
 
@@ -76,39 +117,6 @@ vqls = VQLS(estimator, ansatz, optimizer, sampler,
 result = vqls.solve(A_symmetric, b)
 ```
 
-### Scenario 2: Hybrid QST for Better State Extraction
-
-Use when final state quality is critical:
-
-```python
-from vqls_prototype.solver.hybrid_qst_vqls import Hybrid_QST_VQLS
-
-hybrid_vqls = Hybrid_QST_VQLS(
-    estimator, ansatz, optimizer, sampler,
-    tomography_method="qst"  # Options: "qst", "simulator", "shadow", "htree"
-)
-result = hybrid_vqls.solve(A, b)
-```
-
-### Scenario 3: Pauli Decomposition for General Matrices
-
-Use for non-symmetric or complex-valued matrices:
-
-```python
-vqls = VQLS(estimator, ansatz, optimizer, sampler,
-            options={"matrix_decomposition": "pauli"})
-result = vqls.solve(A_general, b)
-```
-
-## Solver Comparison
-
-| Aspect | VQLS | Hybrid_QST_VQLS | QST_VQLS |
-|--------|------|-----------------|----------|
-| **Optimization** | Hadamard test | Direct Hadamard | QST-based |
-| **State Extraction** | Implicit (via optimization) | Explicit tomography | Full tomography |
-| **Measurement Overhead** | Low | Medium | High |
-| **Robustness** | Standard | Better for small systems | Experimental |
-| **Use Case** | General PDE/CFD | When state quality matters | Research/Legacy |
 
 ## Notebooks & Examples
 
@@ -136,11 +144,7 @@ Classical matrices are decomposed into Pauli/unitary terms for quantum circuit r
 - **Symmetric decomposition** (more efficient): For $A = A^\dagger$
 - **Pauli decomposition** (general): Works for any matrix
 
-### State Tomography
-After optimization, the final quantum state can be reconstructed via:
-- **Full QST**: Complete characterization (high measurement cost)
-- **Shadow QST**: Classical shadow protocol (efficient)
-- **Simulator QST**: Direct statevector on simulators
+
 
 ## Configuration Options
 
@@ -193,13 +197,6 @@ final_params = vqls.logger.parameters[-1]
 - Default `RealAmplitudes` with full entanglement is recommended for CFD problems
 - Higher repetitions (`reps`) improve expressivity but increase barren plateau risk
 
-### Numerical Challenges
-1. **Barren plateaus**: Gradient vanishing near random initialization
-   - Solution: Use warm-start or bounded parameter initialization
-2. **Measurement noise**: Shot limitations on real hardware
-   - Solution: Increase shots or use error mitigation
-3. **Scaling**: VQLS is limited to small systems (~8 qubits for simulators)
-
 ## Validation & Testing
 
 ### Fidelity Metric (Primary)
@@ -221,22 +218,7 @@ residual = np.linalg.norm(A @ x_quantum - b)
 print(f"Residual: {residual:.6f}")
 ```
 
-## Dependencies
 
-### Core Quantum Framework
-- **Qiskit** (≥0.40): Quantum circuit construction and optimization
-- **Qiskit Aer**: Quantum simulators
-- **Qiskit Algorithms**: Variational algorithms and optimizers
-- **Qiskit Experiments**: State tomography implementations
-
-### Numerical Computing
-- **NumPy**: Linear algebra
-- **SciPy**: Advanced numerical methods
-- **Sparse**: Efficient sparse matrix representation (for QST_VQLS)
-
-### Utilities
-- **Matplotlib**: Visualization
-- **tqdm**: Progress bars
 
 ## Publications & References
 
