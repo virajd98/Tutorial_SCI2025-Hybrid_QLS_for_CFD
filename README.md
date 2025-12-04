@@ -14,22 +14,11 @@ $$
 
 where $A$ is a square matrix (typically symmetric/Hermitian) and $x$ is the solution we seek to find. This implementation uses parameterized quantum circuits optimized through classical gradient descent—a paradigm known as **quantum-classical hybrid computing**.
 
-### Key Features
-
-- **Multiple Solver Variants**: Standard VQLS, QST-based VQLS, and Hybrid QST-VQLS
-- **Flexible Matrix Decomposition**: Symmetric and Pauli decompositions for efficient circuit representations
-- **Backend Abstraction**: Works with local Aer simulators, IBM Runtime, and other Qiskit-compatible backends
-- **Quantum State Tomography**: Multiple reconstruction methods (Full QST, Shadow QST, Hierarchical Tree QST)
-- **Optimization Tracking**: Built-in logging of cost function values and parameters across iterations
-
 ## Installation
 
 ### Prerequisites
 
-- Python 3.8+
-- [Qiskit](https://qiskit.org/) 0.40+
-- [Qiskit Aer](https://github.com/Qiskit/qiskit-aer)
-- [Qiskit Experiments](https://github.com/Qiskit/qiskit-experiments)
+- Python 3.10+
 
 ### Quick Start
 
@@ -39,66 +28,8 @@ git clone https://github.com/virajd98/Tutorial_SCI2025-Hybrid_QLS_for_CFD.git
 cd Tutorial_SCI2025-Hybrid_QLS_for_CFD
 
 # Install dependencies
-pip install qiskit qiskit-aer qiskit-algorithms qiskit-experiments matplotlib numpy scipy
+pip install - r requirements.txt
 ```
-
-## Quick Example
-
-Solve a 2D Laplacian PDE using VQLS:
-
-```python
-import numpy as np
-from qiskit.circuit.library import RealAmplitudes
-from qiskit_algorithms.optimizers import COBYLA
-from qiskit.primitives import Estimator, Sampler
-from qiskit.quantum_info import Statevector
-from vqls_prototype.solver.vqls import VQLS
-
-# 1. Create the problem (2x2 Laplacian matrix from PDE discretization)
-def generate_laplacian_matrix(Nx, Ny, delta_x, delta_y):
-    N = Nx * Ny
-    A = np.zeros((N, N))
-    A0 = -2 / (delta_x**2) - 2 / (delta_y**2)
-    A1 = 1 / (delta_x**2)
-    A2 = 1 / (delta_y**2)
-    
-    for a1 in range(Nx):
-        for b1 in range(Ny):
-            index = a1 + b1 * Nx
-            A[index, index] = A0
-            if a1 > 0: A[index, index - 1] = A1
-            if a1 < Nx - 1: A[index, index + 1] = A1
-            if b1 > 0: A[index, index - Nx] = A2
-            if b1 < Ny - 1: A[index, index + Nx] = A2
-    return A
-
-A = generate_laplacian_matrix(Nx=2, Ny=2, delta_x=1.0, delta_y=1.0)
-b = np.ones(4) / np.linalg.norm(np.ones(4))  # normalized RHS
-
-# 2. Setup quantum ansatz & optimizer
-ansatz = RealAmplitudes(num_qubits=2, reps=2, entanglement="full")
-optimizer = COBYLA(maxiter=100)
-
-# 3. Create solver
-vqls = VQLS(
-    estimator=Estimator(),
-    ansatz=ansatz,
-    optimizer=optimizer,
-    sampler=Sampler(),
-    options={"matrix_decomposition": "symmetric"}
-)
-
-# 4. Solve
-result = vqls.solve(A, b)
-
-# 5. Extract and validate solution
-x_quantum = np.real(Statevector(result.state).data)
-x_classical = np.linalg.solve(A, b)
-fidelity = np.abs(np.dot(np.conj(x_quantum), x_classical / np.linalg.norm(x_classical)))**2
-print(f"Fidelity: {fidelity:.4f}")
-```
-
-See `run.py` for a complete working example.
 
 ## Architecture
 
@@ -107,8 +38,6 @@ vqls_prototype/
 ├── solver/                          # Core solvers
 │   ├── base_solver.py              # Abstract base class
 │   ├── vqls.py                     # Standard VQLS solver
-│   ├── hybrid_qst_vqls.py          # Hybrid QST variant
-│   ├── qst_vqls.py                 # Pure QST solver (legacy)
 │   ├── log.py                      # Optimization logging
 │   └── validation.py               # Parameter validation
 │
@@ -126,12 +55,6 @@ vqls_prototype/
 │   ├── hadamard_overlap_test.py    # Overlap-based test
 │   └── direct_hadamard_test.py     # Direct measurement test
 │
-├── tomography/                      # Quantum state reconstruction
-│   ├── qst.py                      # Full QST
-│   ├── simulator_qst.py            # Statevector extraction
-│   ├── shadow_qst.py               # Classical shadow tomography
-│   ├── htree_qst.py                # Hierarchical tree QST
-│   └── nnqst.py                    # Neural network QST
 │
 └── primitives_run_builder/          # Backend abstraction
     ├── base_run_builder.py         # Base builder pattern
