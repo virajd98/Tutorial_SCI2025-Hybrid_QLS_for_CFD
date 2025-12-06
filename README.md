@@ -19,7 +19,7 @@ where $A$ is a square matrix (typically symmetric/Hermitian) and $x$ is the solu
 
 ### Requirements
 ```
-Python **3.11+**
+Python 3.11+
 ```
 
 ### Clone the repository
@@ -103,8 +103,6 @@ vqls_prototype/
 - **`blocks_demo.ipynb`**: Demonstration of block encoding circuit for a 1D Poisson system
 
 
-
-
 ## Configuration Options
 
 When creating a solver, customize behavior via the `options` dictionary:
@@ -125,7 +123,7 @@ vqls = VQLS(
 ## Important Constraints & Considerations
 
 ### Matrix Size
-- Must be a **power of 2** (2×2, 4×4, 8×8, etc.) for direct qubit mapping
+- Must be a **power of 2** (2×2, 4×4, 8×8, etc.)
 
 ### Normalization
 - Input vector `b` **must be normalized**: $\|b\| = 1$
@@ -141,10 +139,16 @@ Compares quantum vs classical solutions:
 
 ## Publications & References
 
-- **Original Paper**: Bravo-Prieto et al. (2019) "Variational Quantum Linear Solver"  
+**Original Paper**:
+- Bravo-Prieto et al. (2019) "Variational Quantum Linear Solver"  
   arXiv:[1909.05820](https://arxiv.org/abs/1909.05820)
+- Viraj D’Souza et al. (2025) Towards hybrid quantum-classical computing for large-scale cfd: Tackling
+scalability challenges of the variational quantum linear solver. [https://doi.org/10.2514/6.2025-3042](https://arc.aiaa.org/doi/10.2514/6.2025-3042)
+  - Daan Camps et al. (2023). Explicit quantum circuits for block encodings of
+certain sparse matrices. [arXiv.2203.10236](https://arxiv.org/abs/2203.10236)
+  
 
-- **Tutorial**: This repository is developed for the tutorial on Hybrid Quantum Linear Solvers at Super Computing India(SCI), 2025
+**Tutorial**: This repository is developed for the tutorial on Hybrid Quantum Linear Solvers at Super Computing India(SCI), 2025
 
 ## License
 
