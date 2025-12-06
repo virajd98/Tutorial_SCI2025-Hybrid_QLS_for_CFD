@@ -16,34 +16,32 @@ where $A$ is a square matrix (typically symmetric/Hermitian) and $x$ is the solu
 
 ## Installation
 
-### Prerequisites
 
-````
 ### Requirements
-- Python **3.10+**
+```
+- Python **3.11+**
+```
 
-### Quick Start
-
-#### Clone the repository
-```bash
+### Clone the repository
+```
 git clone https://github.com/virajd98/Tutorial_SCI2025-Hybrid_QLS_for_CFD.git
 cd Tutorial_SCI2025-Hybrid_QLS_for_CFD
 ````
 
-#### Setup Environment
+### Setup Environment
 
 **macOS / Linux**
 
 ```
-chmod +x run.sh
-./run.sh
+chmod +x Run.sh
+./Run.sh
 ```
 
 **Windows (PowerShell)**
 
 ```
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-./run.ps1
+./Run.ps1
 ```
 
 ### Activate the Environment (Manual)
@@ -58,12 +56,6 @@ source VQLS_env/bin/activate
 
 ```
 .\VQLS_env\Scripts\Activate.ps1
-```
-
-### Deactivate (all OS)
-
-```
-deactivate
 ```
 
 ### Note
