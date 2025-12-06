@@ -112,7 +112,6 @@ qiskit==1.4.4
 qiskit-aer==0.17.1
 qiskit-algorithms==0.3.1
 qiskit-experiments==0.12.0
-qiskit-ibm-ai-local-transpiler==0.4.2
 qiskit-ibm-experiment==0.4.8
 qiskit-ibm-runtime==0.40.1
 qiskit-ibm-transpiler==0.14.0

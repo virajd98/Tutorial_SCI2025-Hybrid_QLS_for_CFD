@@ -9,6 +9,10 @@ See https://arxiv.org/abs/1909.05820
 
 from typing import Optional, Union, List, Callable, Dict, Tuple
 import numpy as np
+import warnings
+
+warnings.filterwarnings("ignore", message=".*qiskit.primitives.estimator.Estimator.*", category=DeprecationWarning)
+warnings.filterwarnings("ignore", message=".*qiskit.primitives.sampler.Sampler.*", category=DeprecationWarning)
 
 from qiskit import QuantumCircuit
 from qiskit.primitives import BaseEstimator, BaseSampler

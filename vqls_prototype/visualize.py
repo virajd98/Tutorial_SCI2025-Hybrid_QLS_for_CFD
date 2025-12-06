@@ -157,7 +157,8 @@ def hadamard_test_beta(V, Al, Alp):
 # Computes  ⟨0| U† A_l V |0⟩  and similar cross term
 # The same Hadamard test circuit as β but use U instead of V†...
 # ------------------------------------------------------------
-def hadamard_test_gamma_Al(V, U, Al, Alp):
+
+def hadamard_test_gamma_Al(V, U, Al):
     n = V.num_qubits
     ctrl = QuantumRegister(1, "anc")
     qr   = QuantumRegister(n, "q")
@@ -168,17 +169,18 @@ def hadamard_test_gamma_Al(V, U, Al, Alp):
     # H on control
     qc.h(ctrl)
 
-    #Apply U_dagger
-    Udg_ctrl = U.inverse().to_gate(label="U†").control(1)
-    qc.append(Udg_ctrl, [ctrl[0]] + qr[:])
+    #Apply U
+    U_ctrl = U.inverse().to_gate(label="U†").control(1)
+    qc.append(U_ctrl, [ctrl[0]] + qr[:])
+    
 
-    # Controlled A_l
+    # Controlled A_lp
     apply_controlled_pauli_string(qc, ctrl[0], Al, qr)
 
-    # Apply V
-   
-    V_ctrl = V.to_gate(label="V").control(1)
-    qc.append(V_ctrl, [ctrl[0]] + qr[:])
+    #Apply V_dagger
+
+    Vdg_ctrl = V.to_gate(label="V").control(1)
+    qc.append(Vdg_ctrl, [ctrl[0]] + qr[:])
 
 
     # Final H
@@ -186,13 +188,10 @@ def hadamard_test_gamma_Al(V, U, Al, Alp):
 
     qc.measure(ctrl, cr)
     return qc
-# ------------------------------------------------------------
 
 
 
-
-
-def hadamard_test_gamma_Alp(V, U, Al, Alp):
+def hadamard_test_gamma_Alp(V, U, Alp):
     n = V.num_qubits
     ctrl = QuantumRegister(1, "anc")
     qr   = QuantumRegister(n, "q")
