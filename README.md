@@ -19,7 +19,7 @@ where $A$ is a square matrix (typically symmetric/Hermitian) and $x$ is the solu
 
 ### Requirements
 ```
-- Python **3.11+**
+Python **3.11+**
 ```
 
 ### Clone the repository
