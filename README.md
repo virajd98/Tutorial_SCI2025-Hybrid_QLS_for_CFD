@@ -1,6 +1,8 @@
 # Hybrid Quantum Linear Solver: A hands on tutorial with Qiskit
 
-A hybrid quantum-classical implementation of **Variational Quantum Linear Solvers** for solving systems of linear equations on quantum computers, with applications to Computational Fluid Dynamics (CFD).
+A hybrid quantum-classical implementation of **Variational Quantum Linear Solvers** for solving systems of linear equations on quantum computers, with applications to Computational Fluid Dynamics (CFD). 
+
+This repository is developed for the tutorial on Hybrid Quantum Linear Solvers at Super Computing India(SCI), 2025
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -137,18 +139,16 @@ Compares quantum vs classical solutions:
 
 
 
-## Publications & References
+## References
 
-**Original Paper**:
 - Bravo-Prieto et al. (2019) "Variational Quantum Linear Solver"  
   arXiv:[1909.05820](https://arxiv.org/abs/1909.05820)
 - Viraj D’Souza et al. (2025) Towards hybrid quantum-classical computing for large-scale cfd: Tackling
 scalability challenges of the variational quantum linear solver. [https://doi.org/10.2514/6.2025-3042](https://arc.aiaa.org/doi/10.2514/6.2025-3042)
-  - Daan Camps et al. (2023). Explicit quantum circuits for block encodings of
+- Daan Camps et al. (2023). Explicit quantum circuits for block encodings of
 certain sparse matrices. [arXiv.2203.10236](https://arxiv.org/abs/2203.10236)
-  
-
-**Tutorial**: This repository is developed for the tutorial on Hybrid Quantum Linear Solvers at Super Computing India(SCI), 2025
+- Most of the functions in the `VQLS` instance is taken from the original repository: [vqls-prototype](https://github.com/QuantumApplicationLab/vqls-prototype)
+- The design of the `VQLS` class is based on the open-source [vqls-prototype](https://github.com/QuantumApplicationLab/vqls-prototype) implementation, from which several core components were adapted for this tutorial.
 
 ## License
 
