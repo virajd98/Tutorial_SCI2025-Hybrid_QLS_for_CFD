@@ -1,4 +1,4 @@
-# Variational Quantum Linear Solver (VQLS) for CFD
+# Hybrid Quantum Linear Solver: A hands on tutorial with Qiskit
 
 A hybrid quantum-classical implementation of **Variational Quantum Linear Solvers** for solving systems of linear equations on quantum computers, with applications to Computational Fluid Dynamics (CFD).
 
@@ -18,7 +18,7 @@ where $A$ is a square matrix (typically symmetric/Hermitian) and $x$ is the solu
 
 ### Prerequisites
 
-````markdown
+````
 ### Requirements
 - Python **3.10+**
 
@@ -34,14 +34,14 @@ cd Tutorial_SCI2025-Hybrid_QLS_for_CFD
 
 **macOS / Linux**
 
-```bash
+```
 chmod +x run.sh
 ./run.sh
 ```
 
 **Windows (PowerShell)**
 
-```powershell
+```
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ./run.ps1
 ```
@@ -50,19 +50,19 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 **macOS / Linux**
 
-```bash
+```
 source VQLS_env/bin/activate
 ```
 
 **Windows (PowerShell)**
 
-```powershell
+```
 .\VQLS_env\Scripts\Activate.ps1
 ```
 
 ### Deactivate (all OS)
 
-```bash
+```
 deactivate
 ```
 
@@ -72,7 +72,7 @@ When running Jupyter notebooks, make sure to **select the kernel corresponding t
 
 
 
-## Architecture
+## Architecture of VQLS Module
 
 ```
 vqls_prototype/
@@ -103,46 +103,13 @@ vqls_prototype/
     └── sampler_run_builder.py      # Sampler routing
 ```
 
-## Usage Scenarios
-
-### Standard VQLS for Symmetric Matrices
-
-Use this for most PDE discretizations (Laplacian, diffusion equations):
-
-```python
-from vqls_prototype.solver.vqls import VQLS
-
-vqls = VQLS(estimator, ansatz, optimizer, sampler,
-            options={"matrix_decomposition": "symmetric"})
-result = vqls.solve(A_symmetric, b)
-```
 
 
 ## Notebooks & Examples
 
-- **`Tut_final.ipynb`**: Interactive tutorial covering VQLS concepts, Ising systems, and complete workflows
-- **`blocks_demo.ipynb`**: Demonstration of blocked circuit operations
-- **`run.py`**: Standalone Python script solving a 2×2 Laplacian system with convergence visualization
+- **`Tut_final.ipynb`**: Interactive tutorial covering VQLS concepts and complete workflow
+- **`blocks_demo.ipynb`**: Demonstration of block encoding circuit for a 1D Poisson system
 
-## Key Concepts
-
-### Variational Ansatz
-The solver uses parameterized quantum circuits (default: `RealAmplitudes`) to represent candidate solutions:
-
-$$|\psi(\theta)\rangle = V(\theta) |0\rangle$$
-
-Parameters $\theta$ are optimized classically to minimize the cost function.
-
-### Cost Function
-The VQLS minimizes:
-
-$$C(\theta) = \langle \psi(\theta) | A^\dagger (\mathbb{I} - |b\rangle\langle b|) A | \psi(\theta) \rangle$$
-
-### Matrix Decomposition
-Classical matrices are decomposed into Pauli/unitary terms for quantum circuit representation:
-
-- **Symmetric decomposition** (more efficient): For $A = A^\dagger$
-- **Pauli decomposition** (general): Works for any matrix
 
 
 
@@ -150,7 +117,7 @@ Classical matrices are decomposed into Pauli/unitary terms for quantum circuit r
 
 When creating a solver, customize behavior via the `options` dictionary:
 
-```python
+```
 vqls = VQLS(
     estimator, ansatz, optimizer, sampler,
     options={
@@ -163,60 +130,20 @@ vqls = VQLS(
 )
 ```
 
-## Accessing Optimization History
-
-Track convergence via the solver's logger:
-
-```python
-result = vqls.solve(A, b)
-
-# Plot cost function vs iteration
-import matplotlib.pyplot as plt
-plt.plot(vqls.logger.values)
-plt.xlabel("Iteration")
-plt.ylabel("Cost Function")
-plt.title("VQLS Convergence")
-plt.show()
-
-# Access final parameters
-final_params = vqls.logger.parameters[-1]
-```
-
 ## Important Constraints & Considerations
 
 ### Matrix Size
 - Must be a **power of 2** (2×2, 4×4, 8×8, etc.) for direct qubit mapping
-- Number of qubits: $n = \log_2(\text{matrix size}) + 1$ (includes ancilla)
 
 ### Normalization
 - Input vector `b` **must be normalized**: $\|b\| = 1$
 - Output requires post-processing rescaling
 
 ### Ansatz Design
-- Qubit count must match system size (see above)
-- Default `RealAmplitudes` with full entanglement is recommended for CFD problems
 - Higher repetitions (`reps`) improve expressivity but increase barren plateau risk
 
-## Validation & Testing
-
-### Fidelity Metric (Primary)
+### Fidelity Metric
 Compares quantum vs classical solutions:
-
-```python
-x_quantum = np.real(Statevector(result.state).data)
-x_classical = np.linalg.solve(A, b)
-x_classical /= np.linalg.norm(x_classical)
-fidelity = np.abs(np.dot(np.conj(x_quantum), x_classical))**2
-print(f"Fidelity: {fidelity:.4f}")  # Target: > 0.95
-```
-
-### Residual Norm
-Measures solution quality:
-
-```python
-residual = np.linalg.norm(A @ x_quantum - b)
-print(f"Residual: {residual:.6f}")
-```
 
 
 
@@ -225,7 +152,7 @@ print(f"Residual: {residual:.6f}")
 - **Original Paper**: Bravo-Prieto et al. (2019) "Variational Quantum Linear Solver"  
   arXiv:[1909.05820](https://arxiv.org/abs/1909.05820)
 
-- **Tutorial**: This repository is developed for the SCI 2025 Hybrid VQLS for CFD tutorial
+- **Tutorial**: This repository is developed for the tutorial on Hybrid Quantum Linear Solvers at Super Computing India(SCI), 2025
 
 ## License
 
@@ -242,5 +169,5 @@ Contributions are welcome! Please:
 
 ---
 
-**Last Updated**: November 2025  
+**Last Updated**: December 2025  
 **Maintained by**: [virajd98](https://github.com/virajd98) and [DenisPoisson](https://github.com/DenisPoisson)
