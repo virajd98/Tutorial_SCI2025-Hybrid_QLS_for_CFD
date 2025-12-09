@@ -23,6 +23,8 @@ from qiskit.quantum_info import Operator, SparsePauliOp, Statevector
 from qiskit.circuit.library import UnitaryGate
 from qiskit.circuit.library.standard_gates import XGate, YGate, ZGate
 
+from qiskit.circuit import Parameter
+
 
 import numpy as np
 from vqls_prototype.matrix_decomposition.matrix_decomposition import PauliDecomposition
@@ -215,7 +217,7 @@ def hardware_efficient_ansatz_param(n, layers=2):
         params.append(theta)
         qc.ry(theta, i)
 
-    qc.barrier()
+    # qc.barrier()
 
     for l in range(layers):
         
@@ -237,8 +239,54 @@ def hardware_efficient_ansatz_param(n, layers=2):
             theta = Parameter(f"theta2_{l}_{q}")
             params.append(theta)
             qc.ry(theta, q)
-        qc.barrier()
+        # qc.barrier()
         
 
 
     return qc
+
+
+
+from qiskit import transpile
+from qiskit_aer import AerSimulator
+
+def hadmard_test_expectation(qc_beta, params_list, shots=10000):
+    """
+    Returns P(0) - P(1) of the ancilla.
+    Automatically binds parameters if present.
+    """
+    # Bind parameters if still symbolic
+    if qc_beta.parameters:
+        qc_beta = bind_ansatz_parameters(qc_beta, params_list)
+
+    sim = AerSimulator()
+    tqc = transpile(qc_beta, sim)
+
+    result = sim.run(tqc, shots=shots).result()
+    counts = result.get_counts()
+
+    p0 = counts.get('0', 0) / shots
+    p1 = counts.get('1', 0) / shots
+
+    return p0 - p1
+
+
+import numpy as np
+
+def bind_ansatz_parameters(qc, params_list):
+    """
+    Bind all symbolic parameters in the circuit so it can be executed.
+    mode:
+        "zeros" -> all parameters = 0
+        "random" -> random values in [0, 2π]
+    """
+    param_binds = {}
+
+    for p, theta in zip(qc.parameters, params_list):
+        # if mode == "random":
+        #     param_binds[p] = np.random.uniform(0, 2*np.pi)
+        # else:
+        #     param_binds[p] = 0.0
+        param_binds[p] = theta
+
+    return qc.assign_parameters(param_binds)
