@@ -203,47 +203,91 @@ def hadamard_test_gamma_Alp(V, U, Alp):
     return qc
 
 
+# def hardware_efficient_ansatz_param(n, layers=2):
+#     """
+#     VQLS-compatible fully parameterized ansatz.
+#     Uses explicit Parameter objects (most robust for VQLS).
+#     """
+#     qc = QuantumCircuit(n)
+#     params = []   # store parameters (optional, not required by VQLS)
+
+
+#     for i in range(n):
+#         theta = Parameter(f"theta_{i}")
+#         params.append(theta)
+#         qc.ry(theta, i)
+
+#     # qc.barrier()
+
+#     for l in range(layers):
+        
+#         # ---- entangling layer ----
+#         for q in range(0,n,2):
+#             qc.cz(q, q + 1)
+
+#         # ---- rotation layer ----
+#         for q in range(n):
+#             theta = Parameter(f"theta_{l}_{q}")
+#             params.append(theta)
+#             qc.ry(theta, q)
+
+#         # ---- entangling layer ----
+#         for q in range(1,n-1,2):
+#             qc.cz(q, q + 1)
+
+#         for q in range(1,n-1):
+#             theta = Parameter(f"theta2_{l}_{q}")
+#             params.append(theta)
+#             qc.ry(theta, q)
+#         # qc.barrier()
+        
+
+
+#     return qc
+
+
+
 def hardware_efficient_ansatz_param(n, layers=2):
     """
     VQLS-compatible fully parameterized ansatz.
     Uses explicit Parameter objects (most robust for VQLS).
     """
-    qc = QuantumCircuit(n)
+    circuit = QuantumCircuit(n)
     params = []   # store parameters (optional, not required by VQLS)
-
 
     for i in range(n):
         theta = Parameter(f"theta_{i}")
         params.append(theta)
-        qc.ry(theta, i)
+        circuit.ry(theta, i)
 
-    # qc.barrier()
+    
 
-    for l in range(layers):
-        
-        # ---- entangling layer ----
-        for q in range(0,n,2):
-            qc.cz(q, q + 1)
-
-        # ---- rotation layer ----
-        for q in range(n):
-            theta = Parameter(f"theta_{l}_{q}")
+    for k in range(layers):
+        if n > 1:
+            for i in range(0, n - 1, 2):
+                circuit.cz(i, i + 1)
+        idx = 0
+        for i in range(n):
+            theta = Parameter(f"theta_{k}_{i}")
             params.append(theta)
-            qc.ry(theta, q)
-
-        # ---- entangling layer ----
-        for q in range(1,n-1,2):
-            qc.cz(q, q + 1)
-
-        for q in range(1,n-1):
-            theta = Parameter(f"theta2_{l}_{q}")
+            circuit.ry(theta, i)
+            idx += 1
+        if n > 2:
+            for i in range(1, n - 1, 2):
+                circuit.cz(i, i + 1)
+        for y in range(1, n - 1):
+            theta = Parameter(f"theta_n_{k}_{y}")
             params.append(theta)
-            qc.ry(theta, q)
-        # qc.barrier()
+            circuit.ry(theta, i)
+            idx += 1
         
 
 
-    return qc
+    return circuit
+
+
+
+
 
 
 
