@@ -268,7 +268,7 @@ def hadmard_test_expectation(qc_beta, params_list, shots=10000):
     p0 = counts.get('0', 0) / shots
     p1 = counts.get('1', 0) / shots
 
-    return p0 - p1
+    return 2*(p0 - p1)
 
 
 import numpy as np
