@@ -1,11 +1,10 @@
 import numpy as np
 
-from qiskit import QuantumCircuit
-from qiskit.circuit.library import RealAmplitudes
 from qiskit_algorithms import optimizers as opt
 from qiskit_aer import Aer
 from qiskit.primitives import Estimator, Sampler
 from qiskit.quantum_info import Statevector
+from qiskit.circuit import Parameter
 import matplotlib.pyplot as plt
 
 # Import the solver class from the repo
@@ -22,9 +21,6 @@ from scipy.sparse import kron, identity, csr_matrix
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, transpile
 from qiskit.quantum_info import Operator, SparsePauliOp, Statevector
 from qiskit.circuit.library import UnitaryGate
-from qiskit_aer import Aer
-
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library.standard_gates import XGate, YGate, ZGate
 
 
@@ -63,27 +59,6 @@ def construct_ising_matrix(n, J=0, eta=1.0):
     A = (transverse_field + J * interaction + identity_term)
     A /= np.linalg.norm(A.toarray(), ord=2)
     return A.toarray()
-
-def hardware_efficient_ansatz_random(n, layers=2):
-    qc = QuantumCircuit(n)
-
-    for l in range(layers):
-        # --- single qubit random rotations ---
-        for i in range(n):
-            theta = np.random.uniform(0, 2*np.pi)
-            phi   = np.random.uniform(0, 2*np.pi)
-            lam   = np.random.uniform(0, 2*np.pi)
-
-            qc.ry(theta, i)
-            # qc.rz(phi,   i)
-            # qc.rx(lam,   i)
-
-        # --- entangling layer ---
-        for i in range(n - 1):
-            qc.cx(i, i+1)
-
-    return qc
-
 
 # ------------------------------------------------------------
 # Helper: apply a Pauli string to qubits (non-controlled)
@@ -226,9 +201,6 @@ def hadamard_test_gamma_Alp(V, U, Alp):
     return qc
 
 
-from qiskit import QuantumCircuit
-from qiskit.circuit import Parameter
-
 def hardware_efficient_ansatz_param(n, layers=2):
     """
     VQLS-compatible fully parameterized ansatz.
@@ -237,7 +209,20 @@ def hardware_efficient_ansatz_param(n, layers=2):
     qc = QuantumCircuit(n)
     params = []   # store parameters (optional, not required by VQLS)
 
+
+    for i in range(n):
+        theta = Parameter(f"theta_{i}")
+        params.append(theta)
+        qc.ry(theta, i)
+
+    qc.barrier()
+
     for l in range(layers):
+        
+        # ---- entangling layer ----
+        for q in range(0,n,2):
+            qc.cz(q, q + 1)
+
         # ---- rotation layer ----
         for q in range(n):
             theta = Parameter(f"theta_{l}_{q}")
@@ -245,7 +230,15 @@ def hardware_efficient_ansatz_param(n, layers=2):
             qc.ry(theta, q)
 
         # ---- entangling layer ----
-        for q in range(n - 1):
-            qc.cx(q, q + 1)
+        for q in range(1,n-1,2):
+            qc.cz(q, q + 1)
+
+        for q in range(1,n-1):
+            theta = Parameter(f"theta2_{l}_{q}")
+            params.append(theta)
+            qc.ry(theta, q)
+        qc.barrier()
+        
+
 
     return qc
